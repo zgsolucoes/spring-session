@@ -1,32 +1,78 @@
+apply plugin:"eclipse"
+apply plugin:"idea"
+apply plugin:"org.grails.grails-plugin"
+//apply plugin:"release"
+
 buildscript {
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
+        maven {
+            url "$artifactory_contextUrl/libs-release/"
+            credentials {
+                username = artifactory_user
+                password = artifactory_password
+            }
+        }
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath group: 'gradle-release', name: 'gradle-release', version: '1.4.7'
     }
 }
 
-version "2.0.0-RC1"
-group "org.grails.plugins"
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 5 * 60, 'seconds' // 5 minutos
+    resolutionStrategy.cacheChangingModulesFor 5 * 60, 'seconds' // 5 minutos
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.name == 'groovy') {
+            details.useTarget group: details.requested.group, name: 'groovy-all', version: details.requested.version
+        }
+    }
+}
+
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        repository(url: "$artifactory_contextUrl/libs-release-local/") {
+//            authentication(userName: artifactory_user, password: artifactory_password)
+//        }
+//        snapshotRepository(url: "$artifactory_contextUrl/libs-snapshot-local/") {
+//            authentication(userName: artifactory_user, password: artifactory_password)
+//        }
+//    }
+//}
+
+//release {
+//    ext['gradle.release.useAutomaticVersion'] = true
+//}
+
+//createReleaseTag.dependsOn uploadArchives
 
 repositories {
     mavenLocal()
-    maven { url "https://repo.grails.org/grails/repo" }
+    maven { url "https://repo.grails.org/grails/core" }
+    maven {
+        url "$artifactory_contextUrl/libs-release/"
+        credentials {
+            username = artifactory_user
+            password = artifactory_password
+        }
+    }
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.grails:grails-bom:$grailsVersion"
     }
+    dependencies {
+        dependency "org.springframework.session:spring-session-data-redis:1.1.1.RELEASE"
+        dependency "org.springframework.session:spring-session:1.1.1.RELEASE"
+    }
     applyMavenExclusions false
 }
+
+ext['spring-session-data-redis.version'] = '1.1.1-RELEASE'
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-logging"
@@ -44,40 +90,58 @@ dependencies {
 
     testRuntime 'org.seleniumhq.selenium:selenium-chrome-driver:2.44.0'
 
-    compile "org.springframework.session:spring-session:1.2.2.RELEASE"
-    compile "org.springframework.data:spring-data-redis:1.7.4.RELEASE"
+//    compile "org.springframework.session:spring-session:1.2.2.RELEASE"
+//    compile "org.springframework.data:spring-data-redis:1.7.4.RELEASE"
 
-    compile "redis.clients:jedis:2.9.0"
+//    compile "redis.clients:jedis:2.9.0"
+
+//    compile 'org.grails.plugins:spring-security-core:3.1.1'
+
+    compile("org.grails.plugins:spring-session-base:1.0-SNAPSHOT"){
+        exclude module: "spring-core"
+        exclude module: "spring-context"
+        exclude module: "spring-context-support"
+        exclude module: "spring-aop"
+        exclude module: "spring-tx"
+        exclude module: "spring-expression"
+        exclude module: "spring-web"
+        exclude module: "spring-security-core"
+        exclude module: "spring-security-web"
+        exclude module: "javax.servlet-api"
+        exclude module: "groovy-all"
+    }
+
+    compile("org.springframework.security:spring-security-web")
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
 }
 
-grailsPublish {
-    // TODO: Provide values here
-    githubSlug = 'jeetmp3/spring-session'
-    license {
-        name = 'Apache-2.0'
-    }
-    title = "Spring Session Grails Plugin"
-    desc = "Provides support for SpringSession project"
-    developers = [jeetmp3:"Jitendra Singh"]
-    portalUser = ""
-    portalPassword = ""
-}
+//grailsPublish {
+//    // TODO: Provide values here
+//    githubSlug = 'jeetmp3/spring-session'
+//    license {
+//        name = 'Apache-2.0'
+//    }
+//    title = "Spring Session Grails Plugin"
+//    desc = "Provides support for SpringSession project"
+//    developers = [jeetmp3:"Jitendra Singh"]
+//    portalUser = ""
+//    portalPassword = ""
+//}
 
-bintray {
-    pkg {
-        name = "$project.name"
-        issueTrackerUrl = "https://github.com/jeetmp3/$project.name/issues"
-        vcsUrl = "https://github.com/jeetmp3/$project.name"
-        version {
-            attributes = ['grails-plugin': "$project.group:$project.name"]
-            name = project.version
-        }
-    }
-}
+//bintray {
+//    pkg {
+//        name = "$project.name"
+//        issueTrackerUrl = "https://github.com/jeetmp3/$project.name/issues"
+//        vcsUrl = "https://github.com/jeetmp3/$project.name"
+//        version {
+//            attributes = ['grails-plugin': "$project.group:$project.name"]
+//            name = project.version
+//        }
+//    }
+//}
 
 test {
     testLogging {
@@ -97,4 +161,17 @@ integrationTest {
     testLogging {
         events 'started', 'passed'
     }
+}
+
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
+
+artifacts {
+    archives sourcesJar
+}
+
+test {
+    ignoreFailures = true
 }

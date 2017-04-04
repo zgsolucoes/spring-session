@@ -1,3 +1,4 @@
+.slcache
 .DS_Store
 *.iml
 *.iws
@@ -14,8 +15,5 @@ classes/
 /plugin.xml
 /target
 /web-app
-gradle/
 .gradle
-gradlew
-gradlew.bat
 *.ipr
