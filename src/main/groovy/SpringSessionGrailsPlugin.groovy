@@ -9,6 +9,7 @@ import org.grails.plugins.springsession.data.redis.SecurityContextDao
 import org.grails.plugins.springsession.data.redis.config.MasterNamedNode
 import org.grails.plugins.springsession.data.redis.config.NoOpConfigureRedisAction
 import org.grails.plugins.springsession.web.http.HttpSessionSynchronizer
+import org.springframework.session.data.redis.RedisFlushMode
 import org.springframework.session.web.http.DefaultCookieSerializer
 import org.springframework.data.redis.connection.RedisNode
 import org.springframework.data.redis.connection.RedisSentinelConfiguration
@@ -24,7 +25,6 @@ import utils.SpringSessionUtils
 @Slf4j
 class SpringSessionGrailsPlugin extends Plugin {
 
-	def version = "2.0.0-G3"
 	def grailsVersion = "3.0.0 > *"
 	def title = "Spring Session Grails Plugin"
 	def author = "Jitendra Singh"
@@ -39,11 +39,11 @@ class SpringSessionGrailsPlugin extends Plugin {
 
 	Closure doWithSpring() {
 		{ ->
+			SpringSessionUtils.application = grailsApplication
 			ConfigObject conf = SpringSessionUtils.sessionConfig
 
 			if (conf.enabled as Boolean) {
 				println "\nConfiguring Spring Session..."
-				SpringSessionUtils.application = grailsApplication
 
 				springSessionConfig(SpringSessionConfig) {
 					grailsApplication = grailsApplication
