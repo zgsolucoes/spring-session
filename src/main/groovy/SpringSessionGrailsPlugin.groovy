@@ -140,9 +140,7 @@ class SpringSessionGrailsPlugin extends Plugin {
 						redisSecurityContextRepository = ref("redisSecurityContextRepository")
 					}
 
-					securityContextPersistenceFilter(SecurityContextPersistenceFilter){
-						securityContextRepository = ref("redisSecurityContextRepository")
-					}
+					securityContextPersistenceFilter(SecurityContextPersistenceFilter, ref("redisSecurityContextRepository"))
 				}
 
 				println "... finished configuring Spring Session"
