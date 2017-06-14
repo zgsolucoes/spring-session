@@ -89,7 +89,7 @@ dependencies {
 
 	testRuntime 'org.seleniumhq.selenium:selenium-chrome-driver:2.44.0'
 
-    compile("org.grails.plugins:spring-session-base:1.0.3") {
+    compile("org.grails.plugins:spring-session-base:1.0.4-SNAPSHOT") {
         exclude module: "spring-core"
         exclude module: "spring-context"
         exclude module: "spring-context-support"

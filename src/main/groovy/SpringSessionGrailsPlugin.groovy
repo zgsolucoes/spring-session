@@ -8,16 +8,17 @@ import org.grails.plugins.springsession.data.redis.RedisSecurityContextRepositor
 import org.grails.plugins.springsession.data.redis.SecurityContextDao
 import org.grails.plugins.springsession.data.redis.config.MasterNamedNode
 import org.grails.plugins.springsession.data.redis.config.NoOpConfigureRedisAction
+import org.grails.plugins.springsession.scope.SpringSessionBeanFactoryPostProcessor
 import org.grails.plugins.springsession.web.http.HttpSessionSynchronizer
-import org.springframework.session.data.redis.RedisFlushMode
-import org.springframework.session.web.http.DefaultCookieSerializer
 import org.springframework.data.redis.connection.RedisNode
 import org.springframework.data.redis.connection.RedisSentinelConfiguration
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
+import org.springframework.session.data.redis.RedisFlushMode
 import org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration
 import org.springframework.session.web.http.CookieHttpSessionStrategy
+import org.springframework.session.web.http.DefaultCookieSerializer
 import org.springframework.session.web.http.HeaderHttpSessionStrategy
 import redis.clients.jedis.JedisShardInfo
 import utils.SpringSessionUtils
@@ -142,6 +143,8 @@ class SpringSessionGrailsPlugin extends Plugin {
 
 					securityContextPersistenceFilter(SecurityContextPersistenceFilter, ref("redisSecurityContextRepository"))
 				}
+
+				springSessionBeanFactoryPostProcessor(SpringSessionBeanFactoryPostProcessor)
 
 				println "... finished configuring Spring Session"
 			}
