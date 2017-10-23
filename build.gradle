@@ -48,7 +48,7 @@ release {
 	ext['gradle.release.useAutomaticVersion'] = true
 }
 
-createReleaseTag.dependsOn uploadArchives
+pushFiles.dependsOn uploadArchives
 
 repositories {
 	mavenLocal()
