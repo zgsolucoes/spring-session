@@ -84,26 +84,29 @@ dependencies {
 
 	console "org.grails:grails-console:$grailsVersion"
 
-	testCompile "org.grails:grails-plugin-testing:$grailsVersion"
 	testCompile "org.grails.plugins:geb:1.0.1"
+
+	testCompile('org.grails:grails-gorm-testing-support:1.0.0.BUILD-SNAPSHOT') {
+		changing = true
+	}
 
 	testRuntime 'org.seleniumhq.selenium:selenium-chrome-driver:2.44.0'
 
-    compile("org.grails.plugins:spring-session-base:1.0.4") {
-        exclude module: "spring-core"
-        exclude module: "spring-context"
-        exclude module: "spring-context-support"
-        exclude module: "spring-aop"
-        exclude module: "spring-tx"
-        exclude module: "spring-expression"
-        exclude module: "spring-web"
-        exclude module: "spring-security-core"
-        exclude module: "spring-security-web"
-        exclude module: "javax.servlet-api"
-        exclude module: "groovy-all"
-    }
+	compile("org.grails.plugins:spring-session-base:1.0.4") {
+		exclude module: "spring-core"
+		exclude module: "spring-context"
+		exclude module: "spring-context-support"
+		exclude module: "spring-aop"
+		exclude module: "spring-tx"
+		exclude module: "spring-expression"
+		exclude module: "spring-web"
+		exclude module: "spring-security-core"
+		exclude module: "spring-security-web"
+		exclude module: "javax.servlet-api"
+		exclude module: "groovy-all"
+	}
 
-	compile("org.springframework.security:spring-security-web:4.0.3.RELEASE")
+	compile "org.springframework.security:spring-security-web:4.0.3.RELEASE"
 }
 
 task wrapper(type: Wrapper) {

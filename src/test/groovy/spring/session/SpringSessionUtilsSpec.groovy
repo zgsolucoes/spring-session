@@ -1,16 +1,13 @@
 package spring.session
 
-import grails.core.GrailsApplication
-import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
-import spock.lang.*
+import org.grails.testing.GrailsUnitTest
+import spock.lang.Specification
 import utils.SpringSessionUtils
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
  */
-@TestMixin(GrailsUnitTestMixin)
-class SpringSessionUtilsSpec extends Specification {
+class SpringSessionUtilsSpec extends Specification implements GrailsUnitTest {
 
     void "Canary test"() {
         expect:
