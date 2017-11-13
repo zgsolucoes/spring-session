@@ -18,7 +18,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-		classpath group: 'gradle-release', name: 'gradle-release', version: '1.4.7'
+		classpath group: 'gradle-release', name: 'gradle-release', version: '1.5.1'
 	}
 }
 
