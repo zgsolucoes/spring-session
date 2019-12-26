@@ -1,0 +1,16 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = false
+charset = utf-8
+
+[*.{groovy,js,json,xml,java}]
+indent_style = tab
+indent_size = 4
+continuation_indent_size = 8
+
+[*.sql]
+indent_style = space
+indent_size = 4
+continuation_indent_size = 8
